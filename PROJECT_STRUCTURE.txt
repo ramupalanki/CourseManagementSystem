@@ -1,0 +1,11 @@
+course-management-system/
+├── course_management_system/
+│   ├── __init__.py
+│   └── models.py
+├── tests/
+│   └── test_models.py
+├── main.py
+├── requirements.txt
+├── .gitignore
+├── README.md
+└── PROJECT_STRUCTURE.txt
