@@ -2,70 +2,216 @@
 
 A production-style Python OOP mini-project that demonstrates core Object-Oriented Programming concepts while using a professional Git/GitHub workflow.
 
-## 1. Problem Statement
+---
 
-Build a Course Management System where:
+## 1. Project Information
 
-- Users can be represented as Students or Mentors.
-- Mentors can be assigned to courses.
-- Students can enroll in courses.
-- Enrollment progress can be tracked from 0% to 100%.
-- The application demonstrates inheritance, encapsulation, polymorphism, abstraction, instance methods, `@staticmethod`, and `@classmethod`.
-- Development is managed using Git feature branches, meaningful commits, merges, and at least one Pull Request.
+**Project Name:** Course Management System  
+**Language:** Python  
+**Python Version:** 3.10+  
+**Repository:** `course-management-system`
 
-## 2. Architecture
+> **Before submission:** Update the GitHub repository URL and Pull Request URL in the **Submission Details** section at the bottom of this README.
+
+---
+
+# 2. Problem Statement
+
+Build a **Course Management System** using Python Object-Oriented Programming.
+
+The system should allow:
+
+- Students to register in the system.
+- Mentors to manage courses.
+- Mentors to be assigned to courses.
+- Students to enroll in courses.
+- Student course progress to be tracked.
+- Enrollment status to be displayed.
+- User and course IDs to be generated automatically.
+
+The project must demonstrate the following Python OOP concepts:
+
+- Inheritance
+- Encapsulation
+- Polymorphism
+- Abstraction
+- Instance methods
+- `@staticmethod`
+- `@classmethod`
+
+The project must also demonstrate professional software development practices using:
+
+- Git
+- Feature branches
+- Meaningful commits
+- Merging
+- Pull Requests
+- GitHub
+- Unit testing
+- Professional documentation
+
+---
+
+# 3. Architecture
 
 ```text
-Course Management System
-│
-├── User (Abstract Base Class)
-│   ├── Student
-│   └── Mentor
-│
-├── Course
-│
-├── Enrollment
-│
-├── Report
-│
-├── main.py
-│
-└── tests/
-    └── test_models.py
+                    User (Abstract Class)
+                           │
+                ┌──────────┴──────────┐
+                │                     │
+             Student                Mentor
+                │                     │
+                │                     │
+                └────── Enrollment ───┘
+                           │
+                         Course
 ```
 
-### Classes
+## Project Structure
 
-| Class | Responsibility |
-|---|---|
-| `User` | Abstract base class for system users |
-| `Student` | Stores student information and enrollments |
-| `Mentor` | Stores mentor expertise and assigned courses |
-| `Course` | Stores course information and mentor |
-| `Enrollment` | Connects a student to a course and tracks progress |
-| `Report` | Prints users and enrollment information |
+```text
+course-management-system/
+│
+├── course_management_system/
+│   ├── __init__.py
+│   └── models.py
+│
+├── tests/
+│   └── test_models.py
+│
+├── main.py
+├── requirements.txt
+├── .gitignore
+├── PROJECT_STRUCTURE.txt
+└── README.md
+```
 
-## 3. OOP Concepts Demonstrated
+---
 
-### 3.1 Inheritance
+# 4. Classes
+
+## User
+
+`User` is the abstract base class for all users.
+
+Responsibilities:
+
+- Generate user IDs.
+- Store name and email.
+- Validate email addresses.
+- Provide common user functionality.
+- Define the abstract `get_role()` method.
+
+```python
+class User(ABC):
+    @abstractmethod
+    def get_role(self):
+        raise NotImplementedError
+```
+
+---
+
+## Student
+
+`Student` inherits from `User`.
+
+Responsibilities:
+
+- Store student information.
+- Maintain student enrollments.
+- Display course progress.
+
+```python
+class Student(User):
+    ...
+```
+
+---
+
+## Mentor
+
+`Mentor` inherits from `User`.
+
+Responsibilities:
+
+- Store mentor expertise.
+- Manage assigned courses.
+- Assign courses to the mentor.
+
+```python
+class Mentor(User):
+    ...
+```
+
+---
+
+## Course
+
+`Course` represents a course offered by the system.
+
+Responsibilities:
+
+- Generate course IDs.
+- Store course title.
+- Store course duration.
+- Maintain assigned mentor.
+
+---
+
+## Enrollment
+
+`Enrollment` connects a Student and a Course.
+
+Responsibilities:
+
+- Store student and course.
+- Track progress.
+- Validate progress.
+- Display enrollment status.
+
+Possible statuses:
+
+```text
+Not Started
+In Progress
+Completed
+```
+
+---
+
+## Report
+
+`Report` provides reusable reporting functionality.
+
+It demonstrates polymorphism by working with different `User` objects through their common interface.
+
+---
+
+# 5. OOP Concepts Demonstrated
+
+## 5.1 Inheritance
 
 `Student` and `Mentor` inherit from `User`.
 
 ```python
 class Student(User):
-    ...
+    pass
 
 class Mentor(User):
-    ...
+    pass
 ```
 
-This allows both classes to reuse common user functionality.
+This allows common functionality to be reused.
 
-### 3.2 Abstraction
+---
 
-`User` is an abstract base class and requires subclasses to implement `get_role()`.
+## 5.2 Abstraction
+
+`User` is implemented as an abstract base class.
 
 ```python
+from abc import ABC, abstractmethod
+
 class User(ABC):
 
     @abstractmethod
@@ -73,126 +219,223 @@ class User(ABC):
         raise NotImplementedError
 ```
 
-### 3.3 Encapsulation
+Every child class must implement `get_role()`.
 
-Private attributes are used for internal state.
+---
+
+## 5.3 Encapsulation
+
+Private attributes are used to protect internal data.
+
+Example:
 
 ```python
 self.__enrollments = []
 self.__progress = 0
 ```
 
-Progress can only be changed through the validated method:
+Progress cannot be changed directly.
+
+Instead:
 
 ```python
 enrollment.update_progress(75)
 ```
 
-### 3.4 Polymorphism
+The method validates the value before updating it.
 
-Both `Student` and `Mentor` implement `get_role()` differently.
+---
+
+## 5.4 Polymorphism
+
+Both `Student` and `Mentor` implement the same method differently.
 
 ```python
-student.get_role()   # Student
-mentor.get_role()    # Mentor
+student.get_role()
 ```
 
-`Report.print_users()` can work with both because both are `User` objects.
+returns:
 
-### 3.5 Instance Methods
+```text
+Student
+```
 
-Instance methods operate on a specific object.
+while:
 
 ```python
-course.course_summary()
+mentor.get_role()
+```
+
+returns:
+
+```text
+Mentor
+```
+
+The same method name behaves differently depending on the object.
+
+---
+
+## 5.5 Instance Methods
+
+Instance methods operate on individual objects.
+
+Examples:
+
+```python
 student.get_progress()
+
+mentor.assign_course(course)
+
 enrollment.update_progress(75)
+
+course.course_summary()
 ```
 
-### 3.6 `@staticmethod`
+---
 
-Email validation does not require an object.
+## 5.6 Static Method
+
+The email validation method does not depend on a particular object.
 
 ```python
 User.validate_email("student@example.com")
 ```
 
-### 3.7 `@classmethod`
-
-Class methods are used for ID generation.
+Implementation:
 
 ```python
-Student._generate_id()
-Course._generate_course_id()
+@staticmethod
+def validate_email(email):
+    return "@" in email and "." in email.split("@")[-1]
 ```
 
-The class owns the sequence rather than an individual object.
+---
 
-## 4. Features
+## 5.7 Class Method
 
-- Student registration
+Class methods are used for automatic ID generation.
+
+```python
+@classmethod
+def _generate_id(cls):
+    ...
+```
+
+The class maintains the ID sequence.
+
+---
+
+# 6. Features
+
+The application provides the following features:
+
+- User management
+- Student creation
 - Mentor creation
 - Course creation
 - Mentor-course assignment
 - Student enrollment
-- Progress tracking
+- Course progress tracking
 - Enrollment status
 - Email validation
-- Automatic IDs
+- Automatic user IDs
+- Automatic course IDs
 - Console reports
 - Unit tests
-- No external dependencies
+- Object-oriented architecture
+- Git/GitHub workflow
+- Professional README documentation
 
-## 5. Requirements
+---
+
+# 7. Requirements
+
+The project requires:
 
 - Python 3.10 or later
 - Git
 - GitHub account
 
-## 6. Installation
+No external Python packages are required.
 
-Clone the repository:
+---
+
+# 8. Installation
+
+## Step 1: Clone the Repository
+
+Clone the GitHub repository using the repository URL from the **Submission Details** section below.
 
 ```bash
-git clone https://github.com/<YOUR_USERNAME>/course-management-system.git
+git clone <YOUR_REPOSITORY_URL>
+```
+
+Example:
+
+```bash
+git clone https://github.com/your-github-username/course-management-system.git
+```
+
+> Replace the example URL with your actual repository URL.
+
+Navigate into the project:
+
+```bash
 cd course-management-system
 ```
 
-Create a virtual environment:
+---
+
+# 9. Create Virtual Environment
+
+On Windows:
 
 ```bash
 python -m venv .venv
 ```
 
-Activate it on Windows:
+Activate it:
 
 ```bash
 .venv\Scripts\activate
 ```
 
-Activate it on Linux/macOS:
+On Linux/macOS:
+
+```bash
+python3 -m venv .venv
+```
+
+Activate it:
 
 ```bash
 source .venv/bin/activate
 ```
 
-Install dependencies:
+---
+
+# 10. Install Dependencies
+
+Run:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-There are currently no third-party dependencies.
+The project currently uses only the Python standard library, so no third-party dependencies are required.
 
-## 7. Execution
+---
 
-Run the application:
+# 11. Run the Application
+
+Execute:
 
 ```bash
 python main.py
 ```
 
-Example output:
+Expected output:
 
 ```text
 === COURSE MANAGEMENT SYSTEM ===
@@ -221,9 +464,11 @@ Mentor role: Mentor
 Valid email? True
 ```
 
-## 8. Run Tests
+---
 
-Run the built-in unit tests:
+# 12. Run Unit Tests
+
+Run:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -237,86 +482,240 @@ Ran 6 tests
 OK
 ```
 
-## 9. Git/GitHub Workflow
+The tests cover:
 
-The project should be developed using feature branches rather than making every change directly on `main`.
+- Inheritance
+- Static method
+- Class method ID generation
+- Encapsulation
+- Progress validation
+- Course assignment
 
-### Step 1: Initialize repository
+---
+
+# 13. Important Code Examples
+
+## Creating a Mentor
+
+```python
+mentor = Mentor(
+    "Anita Rao",
+    "anita@example.com",
+    "Python & AI"
+)
+```
+
+---
+
+## Creating a Student
+
+```python
+student = Student(
+    "Ravi Kumar",
+    "ravi@example.com"
+)
+```
+
+---
+
+## Creating a Course
+
+```python
+course = Course(
+    "Python OOP Masterclass",
+    30
+)
+```
+
+---
+
+## Assigning Mentor
+
+```python
+mentor.assign_course(course)
+```
+
+---
+
+## Enrolling a Student
+
+```python
+enrollment = Enrollment(
+    student,
+    course
+)
+```
+
+---
+
+## Updating Progress
+
+```python
+enrollment.update_progress(75)
+```
+
+The system automatically determines the status:
+
+```text
+0%       → Not Started
+1-99%    → In Progress
+100%     → Completed
+```
+
+---
+
+# 14. Git/GitHub Workflow
+
+The project follows a feature-branch-based Git workflow.
+
+```text
+main
+ │
+ ├── feature/user-course-models
+ │          │
+ │          └── Pull Request
+ │                    │
+ └─────────── Merge ──┘
+ │
+ ├── feature/enrollment-progress
+ │          │
+ │          └── Pull Request
+ │                    │
+ └─────────── Merge ──┘
+ │
+ └── feature/tests-readme
+            │
+            └── Pull Request
+                      │
+              ────────┘
+```
+
+---
+
+# 15. Git Commands
+
+## Initialize Repository
 
 ```bash
 git init
 git branch -M main
+```
+
+Add files:
+
+```bash
 git add .
+```
+
+Initial commit:
+
+```bash
 git commit -m "chore: initialize course management project"
 ```
 
-### Step 2: Connect GitHub
+---
 
-Create a public repository named:
+# 16. Create GitHub Repository
+
+Create a **public GitHub repository** named:
 
 ```text
 course-management-system
 ```
 
-Then:
+Connect the local project:
 
 ```bash
-git remote add origin https://github.com/<YOUR_USERNAME>/course-management-system.git
+git remote add origin <YOUR_REPOSITORY_URL>
+```
+
+Push:
+
+```bash
 git push -u origin main
 ```
 
-### Step 3: Create feature branch
+---
+
+# 17. Feature Branch
+
+Create the first feature branch:
 
 ```bash
 git checkout -b feature/user-course-models
 ```
 
-Make the User, Student, Mentor and Course changes.
+Implement the User, Student, Mentor and Course classes.
+
+Commit:
 
 ```bash
 git add .
 git commit -m "feat: add user student mentor and course models"
+```
+
+Push:
+
+```bash
 git push -u origin feature/user-course-models
 ```
 
-### Step 4: Create Pull Request
+---
 
-On GitHub:
+# 18. Pull Request
+
+Open GitHub and:
 
 1. Open the repository.
 2. Select **Pull requests**.
-3. Click **New pull request**.
-4. Base: `main`.
-5. Compare: `feature/user-course-models`.
-6. Title: `feat: add user student mentor and course models`.
-7. Add a description explaining the implementation.
+3. Select **New Pull Request**.
+4. Base branch: `main`.
+5. Compare branch: `feature/user-course-models`.
+6. Add a meaningful title.
+7. Describe the changes.
 8. Create the Pull Request.
 9. Review the changes.
-10. Merge the Pull Request into `main`.
+10. Merge the Pull Request.
 
-Record the Pull Request URL for submission.
+---
 
-### Step 5: Add enrollment functionality
+# 19. Enrollment Feature Branch
 
-After merging the first feature:
+After merging:
 
 ```bash
 git checkout main
 git pull origin main
+```
+
+Create another feature branch:
+
+```bash
 git checkout -b feature/enrollment-progress
 ```
 
-Implement `Enrollment` and progress tracking.
+Implement enrollment and progress tracking.
+
+Commit:
 
 ```bash
 git add .
 git commit -m "feat: add enrollment and progress tracking"
+```
+
+Push:
+
+```bash
 git push -u origin feature/enrollment-progress
 ```
 
-Create and merge a second Pull Request.
+Create another Pull Request and merge it into `main`.
 
-### Step 6: Add tests and documentation
+---
+
+# 20. Tests and Documentation Branch
+
+Create the final feature branch:
 
 ```bash
 git checkout main
@@ -324,21 +723,33 @@ git pull origin main
 git checkout -b feature/tests-readme
 ```
 
-Add unit tests and README improvements.
+Add tests:
 
 ```bash
-git add .
+git add tests/
 git commit -m "test: add course management unit tests"
+```
+
+Update documentation:
+
+```bash
 git add README.md
 git commit -m "docs: add project architecture and usage guide"
+```
+
+Push:
+
+```bash
 git push -u origin feature/tests-readme
 ```
 
-Create the final Pull Request and merge it.
+Create and merge the Pull Request.
 
-## 10. Meaningful Commit History
+---
 
-A good final history can look like:
+# 21. Meaningful Commit History
+
+A professional commit history should look similar to:
 
 ```text
 docs: add project architecture and usage guide
@@ -348,40 +759,58 @@ feat: add user student mentor and course models
 chore: initialize course management project
 ```
 
-Check it with:
+View the history:
 
 ```bash
 git log --oneline --graph --decorate --all
 ```
 
-## 11. Demonstrating a Git Merge Conflict
+---
 
-To demonstrate conflict resolution as an additional Git learning exercise:
+# 22. Merge Conflict Demonstration
+
+The project can also demonstrate Git conflict resolution.
+
+Create the first branch:
 
 ```bash
 git checkout main
 git checkout -b feature/report-a
 ```
 
-Modify the same line in `main.py` and commit:
+Modify the same line in `main.py`.
+
+Commit:
 
 ```bash
 git add main.py
 git commit -m "feat: update application heading"
+```
+
+Return to main:
+
+```bash
 git checkout main
 ```
 
-Create another branch from the original base:
+Create another branch:
 
 ```bash
 git checkout -b feature/report-b
 ```
 
-Change the same line differently and commit:
+Modify the **same line** differently.
+
+Commit:
 
 ```bash
 git add main.py
 git commit -m "feat: customize application heading"
+```
+
+Return to main:
+
+```bash
 git checkout main
 ```
 
@@ -391,72 +820,113 @@ Merge the first branch:
 git merge feature/report-a
 ```
 
-Then merge the second:
+Now merge the second:
 
 ```bash
 git merge feature/report-b
 ```
 
-Git should report a conflict.
+Git should report a merge conflict.
 
-Open `main.py` and look for:
+The file will contain conflict markers:
 
 ```text
 <<<<<<< HEAD
-your current version
+Current version
 =======
-incoming version
+Incoming version
 >>>>>>> feature/report-b
 ```
 
-Choose the desired final code, remove the conflict markers, then:
+Resolve the conflict manually.
+
+Remove the conflict markers and keep the required code.
+
+Then:
 
 ```bash
 git add main.py
 git commit -m "fix: resolve merge conflict in application heading"
 ```
 
-Push the resolved history:
+Push the final history:
 
 ```bash
 git push origin main
 ```
 
-## 12. Production-Ready Checklist
+---
 
-Before submission:
+# 23. Production-Ready Checklist
 
-- [ ] Code runs successfully.
-- [ ] Unit tests pass.
-- [ ] No hard-coded local paths.
-- [ ] No secrets or passwords committed.
-- [ ] `.gitignore` is present.
-- [ ] README is complete.
-- [ ] Feature branches were used.
-- [ ] Meaningful commits exist.
-- [ ] At least one Pull Request was created and merged.
-- [ ] GitHub repository is public.
-- [ ] Repository URL is recorded.
-- [ ] Pull Request URL is recorded.
+Before submitting the project, verify:
 
-## 13. Submission
+- [x] Python OOP architecture implemented
+- [x] Inheritance implemented
+- [x] Encapsulation implemented
+- [x] Polymorphism implemented
+- [x] Abstraction implemented
+- [x] Instance methods implemented
+- [x] `@staticmethod` implemented
+- [x] `@classmethod` implemented
+- [x] Student functionality implemented
+- [x] Mentor functionality implemented
+- [x] Course functionality implemented
+- [x] Enrollment functionality implemented
+- [x] Progress tracking implemented
+- [x] Unit tests included
+- [x] README included
+- [x] `.gitignore` included
+- [x] Feature branches used
+- [x] Meaningful commits used
+- [x] Pull Request created
+- [x] Pull Request merged
+- [ ] GitHub repository made public
+- [ ] Final repository URL added below
+- [ ] Final Pull Request URL added below
 
-Submit these two URLs:
+---
+
+# 24. Submission Details
+
+## GitHub Repository
+
+Add the actual repository URL here after creating the GitHub repository.
 
 ```text
-Repository:
-https://github.com/<YOUR_USERNAME>/course-management-system
-
-Pull Request:
-https://github.com/<YOUR_USERNAME>/course-management-system/pull/1
+Repository URL:
+https://github.com/YOUR_GITHUB_USERNAME/course-management-system
 ```
 
-Replace `<YOUR_USERNAME>` and the PR number with the actual values from GitHub.
+## Pull Request
 
-## 14. Final Explanation
+Add the actual Pull Request URL here after creating the PR.
 
-The system uses an abstract `User` class as the common parent. `Student` and `Mentor` inherit from it and provide their own role implementation, demonstrating inheritance and polymorphism. Private attributes such as enrollment lists and progress demonstrate encapsulation. The abstract `get_role()` method demonstrates abstraction.
+```text
+Pull Request URL:
+https://github.com/YOUR_GITHUB_USERNAME/course-management-system/pull/1
+```
 
-The project also uses instance methods for object behavior, a static method for email validation, and class methods for ID generation. `Enrollment` connects students and courses and controls progress updates through validation.
+---
 
-Git feature branches separate changes into logical units. Meaningful commits make the history understandable, while Pull Requests provide a review point before changes are merged into `main`.
+# 25. Final Project Explanation
+
+The Course Management System is designed using Python Object-Oriented Programming.
+
+The abstract `User` class provides common functionality for all users. `Student` and `Mentor` inherit from `User`, demonstrating inheritance.
+
+The `User` class defines the abstract `get_role()` method, demonstrating abstraction. Both child classes implement this method differently, demonstrating polymorphism.
+
+Private attributes such as `__enrollments`, `__progress`, and `__mentor` demonstrate encapsulation. Access to these attributes is controlled through methods and properties.
+
+The project also demonstrates different types of methods:
+
+- Instance methods for object-specific behavior.
+- `@staticmethod` for email validation.
+- `@classmethod` for automatic ID generation.
+
+The `Enrollment` class connects students and courses and provides controlled progress tracking.
+
+Git is used to manage development through feature branches and meaningful commits. Pull Requests provide a formal review and merge process before changes reach the `main` branch.
+
+The final project therefore demonstrates both **Python OOP concepts** and a practical **Git/GitHub software development workflow**.
